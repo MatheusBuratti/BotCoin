@@ -15,4 +15,4 @@ class Bot(commands.Bot):
     
 
 bot = Bot(command_prefix='.')
-bot.run('ODI3NTI5MTA5NTg3NDkyODY1.YGcWig.vJNGtrlhgacKDGW4Waf5Wv9lsFo')
+bot.run('ODI3NTI5MTA5NTg3NDkyODY1.YGcWig.LTEuV9-7CdCQAakHujaPks9BEgQ')
