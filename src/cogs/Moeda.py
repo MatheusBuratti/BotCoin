@@ -18,7 +18,8 @@ class Moeda(commands.Cog):
 
     @commands.command(aliases=["coin","preço","preco"])
     async def moeda(self,ctx,argument):
-        pass
+        await ctx.send(cryptocompare.get_price('BTC', currency=['BRL','USD']))
+
 
 def setup(bot):
     bot.add_cog(Moeda(bot))
