@@ -11,6 +11,8 @@ class Moeda(commands.Cog):
         config.read("config.ini")
         self.token = config.get("CRYPTOCOMPARE","TOKEN")
 
+    # Recebe uma string com o nome da moeda e retorna a forma para ela ser usada nos comandos da api
+    # Ex: recebe bitcoin e retorna BTC
     def validarComando(self, comando:str) -> str:
         pass
 
