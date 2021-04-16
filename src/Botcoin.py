@@ -1,10 +1,11 @@
 import os
 from discord.ext import commands
+from configparser import ConfigParser
 
 class Bot(commands.Bot):
     def __init__(self,command_prefix):
         super().__init__(command_prefix)
-        self.coglist = ["Utils"]
+        self.coglist = ["Utils","Moeda"]
 
     async def on_ready(self):
         for cog in self.coglist:
@@ -13,6 +14,8 @@ class Bot(commands.Bot):
 
         print("Ready")
     
-
+config = ConfigParser()
+config.read("config.ini")
+token = config.get("BOT","TOKEN")
 bot = Bot(command_prefix='.')
-bot.run('ODI3NTI5MTA5NTg3NDkyODY1.YGcWig.vJNGtrlhgacKDGW4Waf5Wv9lsFo')
+bot.run(token)
