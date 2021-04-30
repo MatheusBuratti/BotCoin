@@ -13,7 +13,7 @@ class Moeda(commands.Cog):
 
     # Recebe uma string com o nome da moeda e retorna a forma para ela ser usada nos comandos da api
     # Ex: recebe bitcoin e retorna BTC
-    def validarComando(self, comando:str) -> str:
+    def validarMoeda(self, comando:str) -> str:
         if(comando.lower() in ("bitcoin","btc")):
             return "btc"
         elif(comando.lower() in ("dogecoin","doge")):
@@ -34,7 +34,7 @@ class Moeda(commands.Cog):
             return "busd"
         elif(comando.lower() in ("tron","trx")):
             return "trx"
-        return comando
+        return comando.lower()
         
 
     @commands.command(aliases=["coin","preço","preco"])
