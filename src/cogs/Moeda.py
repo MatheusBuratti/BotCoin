@@ -1,3 +1,4 @@
+import ast
 from discord.colour import Colour
 from discord.ext import commands
 from discord import Embed
@@ -56,7 +57,7 @@ class Moeda(commands.Cog):
             await ctx.send("Moeda não encontrada, tente usar a forma abreviada.")
         else:
             file = open("data.txt","r")
-            dic = eval(file.read())
+            dic = ast.literal_eval(file.read())
             file.close()
             if str(ctx.author) in dic:
                 lista = dic.get(str(ctx.author)) 
@@ -78,7 +79,7 @@ class Moeda(commands.Cog):
             await ctx.send("Moeda não encontrada, tente usar a forma abreviada.")
         else:
             file = open("data.txt","r")
-            dic = eval(file.read())
+            dic = ast.literal_eval(file.read())
             file.close()
             if str(ctx.author) in dic:
                 lista = dic.get(str(ctx.author))
@@ -93,7 +94,7 @@ class Moeda(commands.Cog):
     @commands.command(aliases=["l","lista"])
     async def listar(self,ctx):
         file = open("data.txt","r")
-        dic = eval(file.read())
+        dic = ast.literal_eval(file.read())
         file.close()
         if str(ctx.author) in dic:
             lista = dic.get(str(ctx.author))
