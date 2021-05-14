@@ -12,9 +12,6 @@ class Moeda(commands.Cog):
         config.read("config.ini")
         self.token = config.get("CRYPTOCOMPARE","TOKEN")
 
-    # Recebe uma string com o nome da moeda e retorna a forma para ela ser usada nos comandos da api,
-    # caso ela não exista na lista da api, retorna None.
-    # Ex: recebe bitcoin e retorna BTC
     def validarMoeda(self, moeda:str) -> str:
         moeda = moeda.upper()
         if moeda in ("BITCOIN","BTC"):
@@ -39,45 +36,60 @@ class Moeda(commands.Cog):
             return "TRX"
         elif moeda not in cryptocompare.get_coin_list(format=True):
             return None
+        else:
+            listamoedas = cryptocompare.get_coin_list(format=False)
+            for item in listamoedas.keys():
+                x = listamoedas.get(item)
+                nome = x.get("CoinName")
+                nome = nome.upper()
+                if nome == moeda:
+                    return x.get("Name")        
         return moeda
         
-
     @commands.command(aliases=["coin","preço","preco"])
-    async def moeda(self,ctx,argument):
-        moeda = self.validarMoeda(argument)
-        if moeda is None:
-            await ctx.send("Moeda não encontrada, tente usar a forma abreviada.")
+    async def moeda(self,ctx,*args):
+        if args == ():
+            await ctx.send("Utilizar junto com nome da moeda. Digite \".help moeda\" para mais informações.")
         else:
-            valores = str(cryptocompare.get_price(moeda, currency=['BRL','USD']))
-            valores = valores.translate({ord(i): None for i in ',}{: '})
-            valores = valores.split('\'')
-            embed = Embed(colour=Colour.blurple(),title=valores[1]) # valores[1] == moeda
-            embed.add_field(name=valores[3],value=valores[4]) # valores[3] == 'BRL'   valores[4] == valor da moeda em BRL
-            embed.add_field(name=valores[5],value=valores[6]) # valores[5] == 'USD'   valores[5] == valor da moeda em USD
-            await ctx.send(embed=embed)
+            moeda = self.validarMoeda(' '.join(args))
+            if moeda is None:
+                await ctx.send("Moeda não encontrada.")
+            else:
+                valores = str(cryptocompare.get_price(moeda, currency=['BRL','USD']))
+                valores = valores.translate({ord(i): None for i in ',}{: '})
+                valores = valores.split('\'')
+                listamoedas = cryptocompare.get_coin_list(format=False)
+                moeda = listamoedas.get(moeda)
+                embed = Embed(colour=Colour.blurple(),title=moeda.get("CoinName"))
+                embed.add_field(name=valores[3],value=valores[4]) # valores[3] == 'BRL'   valores[4] == valor da moeda em BRL
+                embed.add_field(name=valores[5],value=valores[6]) # valores[5] == 'USD'   valores[5] == valor da moeda em USD
+                await ctx.send(embed=embed)
 
     @commands.command(aliases=["add"])
-    async def adicionar(self,ctx,argument):
-        moeda = self.validarMoeda(argument)
-        if moeda is None:
-            await ctx.send("Moeda não encontrada, tente usar a forma abreviada.")
+    async def adicionar(self,ctx,*args):
+        if args == ():
+            await ctx.send("Utilizar junto com nome da moeda. Digite \".help adicionar\" para mais informações.")
         else:
-            file = open("data.txt","r")
-            dic = ast.literal_eval(file.read())
-            file.close()
-            if str(ctx.author) in dic:
-                lista = dic.get(str(ctx.author)) 
-                if moeda not in lista:
-                    lista.append(str(moeda))
+            moeda = self.validarMoeda(' '.join(args))
+            if moeda is None:
+                await ctx.send("Moeda não encontrada, tente usar a forma abreviada.")
             else:
-                lista = list()
-                lista.append(str(moeda))
-                dic[str(ctx.author)] = lista
+                file = open("data.txt","r")
+                dic = ast.literal_eval(file.read())
+                file.close()
+                if str(ctx.author) in dic:
+                    lista = dic.get(str(ctx.author)) 
+                    if moeda not in lista:
+                        lista.append(str(moeda))
+                else:
+                    lista = list()
+                    lista.append(str(moeda))
+                    dic[str(ctx.author)] = lista
 
-            file = open("data.txt","w")
-            file.write(str(dic))
-            file.close()
-            await ctx.send("Adicionada!")
+                file = open("data.txt","w")
+                file.write(str(dic))
+                file.close()
+                await ctx.send("Adicionada!")
 
     @commands.command(aliases=["rm"])
     async def remover(self,ctx,argument):
