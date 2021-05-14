@@ -51,7 +51,6 @@ class Moeda(commands.Cog):
             valores = str(cryptocompare.get_price(moeda, currency=['BRL','USD']))
             valores = valores.translate({ord(i): None for i in ',}{: '})
             valores = valores.split('\'')
-            print(valores)
             embed = Embed(colour=Colour.blurple(),title=valores[1]) # valores[1] == moeda
             embed.add_field(name=valores[3],value=valores[4]) # valores[3] == 'BRL'   valores[4] == valor da moeda em BRL
             embed.add_field(name=valores[5],value=valores[6]) # valores[5] == 'USD'   valores[5] == valor da moeda em USD
@@ -111,7 +110,6 @@ class Moeda(commands.Cog):
                 valores = str(cryptocompare.get_price(moeda, currency=['BRL','USD']))
                 valores = valores.translate({ord(i): None for i in ',}{: '})
                 valores = valores.split('\'')
-                print(valores)
                 embed = Embed(colour=Colour.blurple(),title=valores[1]) # valores[1] == moeda
                 embed.add_field(name=valores[3],value=valores[4]) # valores[3] == 'BRL'   valores[4] == valor da moeda em BRL
                 embed.add_field(name=valores[5],value=valores[6]) # valores[5] == 'USD'   valores[5] == valor da moeda em USD

@@ -29,8 +29,8 @@ class Utils(commands.Cog):
         elif argument in ("listar","ls","lista"):
             embed.title = "Listar"
             embed.description = "Retorna os valores atualizado de cada moeda da sua lista de favoritos em dólares (USD) e em reais (BRL)."
-        #else:
-        #   embed.title = "Comando não encontrado!"
+        else:
+           embed.title = "Comando não encontrado!"
         await ctx.send(embed=embed)
 
     @commands.command()
