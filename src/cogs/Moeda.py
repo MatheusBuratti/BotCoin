@@ -1,5 +1,4 @@
 import ast
-from discord import colour
 from discord.colour import Colour
 from discord.ext import commands
 from discord import Embed
