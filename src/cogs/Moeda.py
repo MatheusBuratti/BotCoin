@@ -1,4 +1,5 @@
 import ast
+from discord import colour
 from discord.colour import Colour
 from discord.ext import commands
 from discord import Embed
@@ -48,7 +49,14 @@ class Moeda(commands.Cog):
         if moeda is None:
             await ctx.send("Moeda não encontrada, tente usar a forma abreviada.")
         else:
-            await ctx.send(cryptocompare.get_price(moeda, currency=['BRL','USD']))
+            valores = str(cryptocompare.get_price(moeda, currency=['BRL','USD']))
+            valores = valores.translate({ord(i): None for i in ',}{: '})
+            valores = valores.split('\'')
+            print(valores)
+            embed = Embed(colour=Colour.blurple(),title=valores[1]) # valores[1] == moeda
+            embed.add_field(name=valores[3],value=valores[4]) # valores[3] == 'BRL'   valores[4] == valor da moeda em BRL
+            embed.add_field(name=valores[5],value=valores[6]) # valores[5] == 'USD'   valores[5] == valor da moeda em USD
+            await ctx.send(embed=embed)
 
     @commands.command(aliases=["add"])
     async def adicionar(self,ctx,argument):
@@ -71,6 +79,7 @@ class Moeda(commands.Cog):
             file = open("data.txt","w")
             file.write(str(dic))
             file.close()
+            await ctx.send("Adicionada!")
 
     @commands.command(aliases=["rm"])
     async def remover(self,ctx,argument):
@@ -90,16 +99,26 @@ class Moeda(commands.Cog):
             file = open("data.txt","w")
             file.write(str(dic))
             file.close()
+            await ctx.send("Removida!")
 
-    @commands.command(aliases=["l","lista"])
+    @commands.command(aliases=["ls","lista"])
     async def listar(self,ctx):
         file = open("data.txt","r")
         dic = ast.literal_eval(file.read())
         file.close()
         if str(ctx.author) in dic:
             lista = dic.get(str(ctx.author))
-            for item in lista:
-                await ctx.send(cryptocompare.get_price(item, currency=['BRL','USD']))
+            for moeda in lista:
+                valores = str(cryptocompare.get_price(moeda, currency=['BRL','USD']))
+                valores = valores.translate({ord(i): None for i in ',}{: '})
+                valores = valores.split('\'')
+                print(valores)
+                embed = Embed(colour=Colour.blurple(),title=valores[1]) # valores[1] == moeda
+                embed.add_field(name=valores[3],value=valores[4]) # valores[3] == 'BRL'   valores[4] == valor da moeda em BRL
+                embed.add_field(name=valores[5],value=valores[6]) # valores[5] == 'USD'   valores[5] == valor da moeda em USD
+                await ctx.send(embed=embed)
+        else:
+            await ctx.send("Não encontrado!")
 
 
 def setup(bot):
